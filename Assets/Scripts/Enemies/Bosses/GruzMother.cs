@@ -10,8 +10,8 @@ public class GruzMother : Enemy
     public float speed = 1f;
     [SerializeField] private EnemyState currentState;
     [SerializeField] private bool isHitWall, isDesc;
-    [SerializeField] private Transform[] crashPoints;
-    [SerializeField] private Transform deathCrashPoint;
+    [SerializeField] public Transform[] crashPoints;
+    [SerializeField] public Transform deathCrashPoint;
     [SerializeField]
     private int currentCrashPoint, crashCount, maxCrashCount;
     [SerializeField] private GameObject coliisionEffect;
