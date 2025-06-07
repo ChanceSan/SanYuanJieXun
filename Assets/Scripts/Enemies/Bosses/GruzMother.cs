@@ -442,14 +442,14 @@ public class GruzMother : Enemy
 
     public void LockGates()
     {
-        leftBattleGate.Lock();
-        rightBattleGate.Lock();
+        //leftBattleGate.Lock();
+        //rightBattleGate.Lock();
     }
 
     public void UnlockGates()
     {
-        leftBattleGate.Unlock();
-        rightBattleGate.Unlock();
+        //leftBattleGate.Unlock();
+        //rightBattleGate.Unlock();
     }
 
     public void PlayGushingEffect()

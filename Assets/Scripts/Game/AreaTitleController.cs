@@ -22,7 +22,7 @@ public class AreaTitleController : MonoBehaviour
         if (!isTrigger && collision.gameObject.layer == LayerMask.NameToLayer("Hero Detector"))
         {
             isTrigger = true;
-            StartCoroutine(DelayDisplayAreaTitle());
+            StartCoroutine(DelayDisplayAreaTitle());    
 
             if (bgm != null)
             {
