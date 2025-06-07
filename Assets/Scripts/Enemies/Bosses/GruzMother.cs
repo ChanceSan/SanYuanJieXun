@@ -169,7 +169,7 @@ public class GruzMother : Enemy
     private void ExitSleepState()
     {
         LockGates();
-        GetComponent<TextReminderTrigger>().DisplayText();
+        //GetComponent<TextReminderTrigger>().DisplayText();
         snore.Stop();
         snoreAudio.Stop();
         GetComponent<Collider2D>().isTrigger = false;
@@ -415,8 +415,8 @@ public class GruzMother : Enemy
 
     public void PlayBossDefeatVoice()
     {
-        mainSource.PlayOneShot(bossDefeat);
-        mainSource.PlayOneShot(bossExplore);
+        //mainSource.PlayOneShot(bossDefeat);
+        //mainSource.PlayOneShot(bossExplore);
     }
 
     IEnumerator FadeOut(float speed)
