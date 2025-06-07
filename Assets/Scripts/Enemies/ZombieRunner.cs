@@ -29,9 +29,19 @@ public class ZombieRunner : Enemy
 
     Rigidbody2D rb;
 
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // 优化刚体物理设置
+        rb.freezeRotation = true; // 防止意外旋转
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // 更精确的碰撞检测
+        rb.sharedMaterial = new PhysicsMaterial2D()
+        {
+            friction = 0.1f,
+            bounciness = 0.05f
+        };
+
         hit = GetComponentInChildren<HitEffect>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
@@ -79,8 +89,20 @@ public class ZombieRunner : Enemy
 
     private void Detect()
     {
-        groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGrounded);
-        wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.left, wallCheckDistance, whatIsWall);
+        // 使用更可靠的检测方法
+        RaycastHit2D groundHit = Physics2D.Raycast(groundCheck.position, Vector2.down,
+                                                 groundCheckDistance, whatIsGrounded);
+        groundDetected = groundHit.collider != null;
+
+        // 检查前方是否有墙
+        Vector2 direction = isFacingLeft ? Vector2.left : Vector2.right;
+        RaycastHit2D wallHit = Physics2D.Raycast(wallCheck.position, direction,
+                                              wallCheckDistance, whatIsWall);
+        wallDetected = wallHit.collider != null;
+
+        // 添加调试可视化
+        Debug.DrawRay(groundCheck.position, Vector2.down * groundCheckDistance, groundDetected ? Color.green : Color.red);
+        Debug.DrawRay(wallCheck.position, direction * wallCheckDistance, wallDetected ? Color.green : Color.red);
     }
 
     private void UpdateAnimatorStatement()
@@ -99,16 +121,36 @@ public class ZombieRunner : Enemy
 
     private void EnterMovementState()
     {
+        // 检查是否需要翻转
         if (!groundDetected || wallDetected)
         {
-            // Flip
             Flip();
+
+            // 更新翻转后的检测方向
+            Vector2 direction = isFacingLeft ? Vector2.left : Vector2.right;
+            wallDetected = Physics2D.Raycast(wallCheck.position, direction,
+                                          wallCheckDistance, whatIsWall);
+
+            // 添加额外安全检查
+            if (!groundDetected || wallDetected)
+            {
+                // 尝试第二次翻转
+                Flip();
+            }
         }
-        else
+
+        // 应用移动速度
+        float moveDirection = isFacingLeft ? -1 : 1;
+
+        // 添加轻微随机移动，防止卡在某个位置
+        float slightRandom = Mathf.PerlinNoise(Time.time * 0.1f, 0) * 0.2f - 0.1f;
+        movement.Set((moveDirection + slightRandom) * normalSpeed, rb.velocity.y);
+        rb.velocity = movement;
+
+        // 防止被微小颠簸卡住
+        if (Mathf.Abs(rb.velocity.x) < 0.1f)
         {
-            // Move
-            movement.Set((isFacingLeft ? -1 : 1) * normalSpeed, rb.velocity.y);
-            rb.velocity = movement;
+            rb.AddForce(new Vector2(moveDirection * 5f, 0));
         }
     }
     private void ExitMovementState()
