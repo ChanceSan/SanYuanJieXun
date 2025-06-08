@@ -2169,13 +2169,23 @@ PrefabInstance:
       objectReference: {fileID: 7976280384170042423}
     - target: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: -3.6591976
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3.371047
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 33.29
+      value: 32.7605
       objectReference: {fileID: 0}
     - target: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.32
+      value: 2.9978
       objectReference: {fileID: 0}
     - target: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
         type: 3}
@@ -2221,8 +2231,68 @@ PrefabInstance:
     - {fileID: 6141595271988922178, guid: 18e380abbe2be1142916e492187accf8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2622237225918215459, guid: 18e380abbe2be1142916e492187accf8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7603226384317548986}
   m_SourcePrefab: {fileID: 100100000, guid: 18e380abbe2be1142916e492187accf8, type: 3}
+--- !u!1 &3873274574434394043 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2622237225918215459, guid: 18e380abbe2be1142916e492187accf8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1271330562486823576}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7603226384317548986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3873274574434394043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0509d5eeafdf96468da82454cca2f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  isDead: 0
+  coin: {fileID: 0}
+  minSpawnCount: 1
+  maxSpawnCount: 3
+  maxBumpHorizontalForce: 400
+  minBumpVerticalForce: 600
+  maxBumpVerticalForce: 800
+  isFacingLeft: 0
+  speed: 1
+  currentState: 0
+  isHitWall: 0
+  isDesc: 0
+  crashPoints: []
+  deathCrashPoint: {fileID: 0}
+  currentCrashPoint: 0
+  crashCount: 0
+  maxCrashCount: 0
+  coliisionEffect: {fileID: 0}
+  flySpawn: {fileID: 0}
+  deathGravity: 0
+  deathUpForce: 0
+  snore: {fileID: 0}
+  gushing: {fileID: 0}
+  boom: {fileID: 0}
+  enemyDamage: {fileID: 0}
+  snoreStartle: {fileID: 0}
+  wallHit: {fileID: 0}
+  bossDefeat: {fileID: 0}
+  bossExplore: {fileID: 0}
+  bossFinalHit: {fileID: 0}
+  bossGushing: {fileID: 0}
+  mainSource: {fileID: 0}
+  effectAudio: {fileID: 0}
+  snoreAudio: {fileID: 0}
+  attackBGM: {fileID: 0}
+  leftBattleGate: {fileID: 0}
+  rightBattleGate: {fileID: 0}
 --- !u!4 &5178475480050454315 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6231020810860340659, guid: 18e380abbe2be1142916e492187accf8,
