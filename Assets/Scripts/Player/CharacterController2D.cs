@@ -532,6 +532,7 @@ public class CharacterController2D : MonoBehaviour
     /// <returns></returns>
     public IEnumerator TakeDamage(Enemy enemy)
     {
+        Debug.Log("受到伤害");
         ProCamera2DShake.Instance.Shake(ProCamera2DShake.Instance.ShakePresets[3]);
         gameManager.SetEnableInput(false);
         audioEffectPlayer.Play(CharacterAudio.AudioType.HeroDamage, true);
