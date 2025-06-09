@@ -21,6 +21,11 @@ public class ZombieRunner : Enemy
     private HitEffect hit;
     private bool groundDetected, wallDetected, isAttack, isHurt;
 
+    // 新增防抖变量
+    [Header("Flip Anti-Jitter Settings")]
+    [SerializeField] private float flipCooldown = 0.4f; // 翻转冷却时间
+    private float lastFlipTime;
+    private bool isFlipping;
     public enum EnemyState
     {
         IDLE, MOVEMENT, ATTACK_READY, ATTACK, HURT, DEAD
@@ -32,7 +37,7 @@ public class ZombieRunner : Enemy
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        lastFlipTime = -flipCooldown; // 确保立即可翻转
         // 优化刚体物理设置
         rb.freezeRotation = true; // 防止意外旋转
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // 更精确的碰撞检测
@@ -45,7 +50,42 @@ public class ZombieRunner : Enemy
         hit = GetComponentInChildren<HitEffect>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
+    public void SafeFlip()
+    {
+        // 检查是否允许翻转（冷却时间已过且不在翻转中）
+        if (Time.time - lastFlipTime < flipCooldown || isFlipping)
+            return;
 
+        StartCoroutine(FlipWithCooldown());
+    }
+    // === 带冷却时间的翻转协程 ===
+    private IEnumerator FlipWithCooldown()
+    {
+        // 1. 标记翻转中
+        isFlipping = true;
+
+        // 2. 执行实际翻转
+        Flip();
+
+        // 3. 记录翻转时间
+        lastFlipTime = Time.time;
+
+        // 4. 等待冷却时间（但不阻塞游戏）
+        yield return new WaitForSeconds(flipCooldown);
+
+        // 5. 标记翻转完成
+        isFlipping = false;
+    }
+    // === 实际翻转操作 ===
+    private void DoActualFlip()
+    {
+        Vector3 vector = transform.localScale;
+        vector.x *= -1;
+        transform.localScale = vector;
+
+        // 更新方向状态（确保在其他代码中使用）
+        isFacingLeft = !isFacingLeft;
+    }
     private void Update()
     {
         if (isDead)
@@ -124,7 +164,8 @@ public class ZombieRunner : Enemy
         // 检查是否需要翻转
         if (!groundDetected || wallDetected)
         {
-            Flip();
+            Debug.Log("翻转");
+            SafeFlip();
 
             // 更新翻转后的检测方向
             Vector2 direction = isFacingLeft ? Vector2.left : Vector2.right;
@@ -135,7 +176,7 @@ public class ZombieRunner : Enemy
             if (!groundDetected || wallDetected)
             {
                 // 尝试第二次翻转
-                Flip();
+                SafeFlip();
             }
         }
 
@@ -166,11 +207,11 @@ public class ZombieRunner : Enemy
         animator.SetBool("Attack", isAttack);
         if (player.position.x - transform.position.x > 0 && isFacingLeft)
         {
-            Flip();
+            SafeFlip();
         }
         else if (player.position.x - transform.position.x < 0 && !isFacingLeft)
         {
-            Flip();
+            SafeFlip();
         }
     }
 
@@ -184,7 +225,7 @@ public class ZombieRunner : Enemy
         if (!groundDetected || wallDetected)
         {
             // Flip
-            Flip();
+            SafeFlip();
             SwitchState(EnemyState.MOVEMENT);
         }
         else
@@ -236,10 +277,12 @@ public class ZombieRunner : Enemy
 
     void Flip()
     {
-        // 翻转图像
         Vector3 vector = transform.localScale;
-        vector.x = vector.x * -1;
+        vector.x *= -1;
         transform.localScale = vector;
+
+        // 更新方向状态（确保在其他代码中使用）
+        isFacingLeft = !isFacingLeft;
     }
 
     public void SwitchState(EnemyState state)

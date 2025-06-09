@@ -1,8 +1,8 @@
 using System.Collections;
 using UnityEngine;
-
 public class Fireball : MonoBehaviour
 {
+    [Header("Settings")]
     public int damage = 25;
     public float speed = 12f;
     public LayerMask playerLayer;
@@ -10,9 +10,22 @@ public class Fireball : MonoBehaviour
 
     private Vector2 direction;
     private Collider2D ballCollider;
+    private Rigidbody2D rb;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+        rb.gravityScale = 0;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+    }
 
     void Start()
     {
+        // 初始化碰撞体延迟启用（防止自伤）
         ballCollider = GetComponent<Collider2D>();
         if (ballCollider != null)
         {
@@ -35,24 +48,18 @@ public class Fireball : MonoBehaviour
     {
         direction = newDirection.normalized;
 
+        // 设置刚体速度
+        if (rb != null)
+        {
+            rb.velocity = direction * speed;
+        }
+
         // 根据方向旋转火球
         if (direction != Vector2.zero)
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
-    }
-
-    void Update()
-    {
-        if (direction == Vector2.zero)
-        {
-            Debug.LogWarning("Fireball has no direction, destroying");
-            Destroy(gameObject);
-            return;
-        }
-
-        transform.position += (Vector3)direction * speed * Time.deltaTime;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -73,12 +80,22 @@ public class Fireball : MonoBehaviour
                     StartCoroutine(player.TakeDamage());
                 }
             }
-            Destroy(gameObject);
+            DestroyFireball();
         }
         // 地形检测
         else if (other.gameObject.layer == LayerMask.NameToLayer("Terrain"))
         {
-            Destroy(gameObject);
+            DestroyFireball();
         }
+    }
+
+    private void DestroyFireball()
+    {
+        // 添加爆炸效果（如果有）
+        //if (TryGetComponent(out FireballEffect effect))
+        //{
+        //    effect.PlayExplosion();
+        //}
+        Destroy(gameObject);
     }
 }

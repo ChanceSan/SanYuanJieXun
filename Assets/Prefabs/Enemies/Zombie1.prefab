@@ -378,6 +378,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: abf6b8fed0bcf694fb52349648fd4073, type: 3}
   - {fileID: 8300000, guid: e415521098760954fb492208e1fb0486, type: 3}
   hited: {fileID: 8300000, guid: 781e27b93ee7bc047846548f1aa7c812, type: 3}
+  flipCooldown: 0.4
 --- !u!212 &4540087559694713592
 SpriteRenderer:
   m_ObjectHideFlags: 0

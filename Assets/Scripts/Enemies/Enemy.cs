@@ -62,6 +62,7 @@ public class Enemy : Breakable
 
     protected override void Dead()
     {
+        Debug.Log("敌人死亡");
         base.Dead();
         SpawnCoins();
         canMove = false;
