@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LTS/Boss1.unity
     guid: c140622824562814ca8d9d391f4140e3
+  - enabled: 1
+    path: Assets/Scenes/LTS/Boss2.unity
+    guid: 3fdb8f493ebd372499dc3912d0547149
   m_configObjects: {}

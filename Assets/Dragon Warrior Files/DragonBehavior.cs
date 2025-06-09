@@ -47,6 +47,8 @@ public class DragonBehavior : Enemy
     public float hitFlashDuration = 0.1f;
     public Color hitFlashColor = Color.red;
 
+    private BossDeathHandler deathHandler;
+
     //音效
     [Header("Audio Clip")]
     [SerializeField] private AudioSource audioSource;
@@ -191,6 +193,7 @@ public class DragonBehavior : Enemy
     // === 2. 重写Dead方法 ===
     protected override void Dead()
     {
+
         if (currentState == DragonState.Dead) return;
         base.Dead();
         // 切换到死亡状态
@@ -207,6 +210,17 @@ public class DragonBehavior : Enemy
 
         // 禁用碰撞体和物理
         DisableCollidersAndPhysics();
+
+
+        // 获取BossDeathHandler组件
+        deathHandler = GetComponent<BossDeathHandler>();
+
+        // 安全检查
+        if (deathHandler == null)
+        {
+            Debug.LogError("Boss缺少BossDeathHandler组件!");
+        }
+        deathHandler.OnBossDeath();
     }
 
     private void DisableCollidersAndPhysics()
@@ -425,7 +439,7 @@ public class DragonBehavior : Enemy
 
     void HandleAttackState()
     {
-        Debug.Log("进入攻击范围");
+        //Debug.Log("进入攻击范围");
         // 停止移动并面向玩家
         rb.velocity = new Vector2(0, rb.velocity.y);
         animator.SetFloat("Speed", 0);
@@ -437,17 +451,12 @@ public class DragonBehavior : Enemy
             transform.localScale = new Vector3(-1, 1, 1);
 
         //在发射火球的冷却期过去后才可以发射
-        if (canAttack) { 
+        if (canAttack)
+        {
             animator.SetTrigger("Attack");
-            canAttack=false;
+            canAttack = false;
             StartCoroutine(ExecuteFireSequence());//发射完进入冷却器
         }
-    }
-    // 由动画事件调用的方法（必须在动画编辑器中添加到合适的帧）
-    // 修改动画事件方法：只用于日志，不发射火球
-    public void AnimEvent_LaunchFireball()
-    {
-        Debug.Log("动画播放到火球发射点");
     }
 
     //协程等待火球发射冷却时间
